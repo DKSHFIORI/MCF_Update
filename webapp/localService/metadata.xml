@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="http://kulhdb01d.dksh.com:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://kulhdb01d.dksh.com:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://kulhdb01d.dksh.com:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://kulhdb01d.dksh.com:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://kulhdb01d.dksh.com:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://kulhdb01d.dksh.com:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://kulhdb01d.dksh.com:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://kulhdb01d.dksh.com:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="http://kulhdb01d.dksh.com:8000/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="YGW_MM_MCF_UPDATE_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="I_ACMTrdgContrSalesOrgVHType" sap:label="Sales Organization Value Help" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="SalesOrganization"/>
+                </Key>
+                <Property Name="SalesOrganization" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:text="SalesOrganizationName" sap:label="Sales Organization"/>
+                <Property Name="SalesOrganizationName" Type="Edm.String" MaxLength="20" sap:label="Name"/>
+            </EntityType>
+            <EntityType Name="I_CountryVHType" sap:label="Country Value Help" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Country"/>
+                </Key>
+                <Property Name="Country" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="UpperCase" sap:text="Country_Text" sap:label="Country/Region Key"/>
+                <Property Name="Country_Text" Type="Edm.String" MaxLength="50" sap:label="Country Name" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="Description" Type="Edm.String" MaxLength="50" sap:label="Country Name"/>
+                <Property Name="CountryThreeLetterISOCode" Type="Edm.String" MaxLength="3" sap:display-format="UpperCase" sap:label="ISO Code 3 Char" sap:quickinfo="ISO country code 3 char"/>
+                <Property Name="CountryThreeDigitISOCode" Type="Edm.String" MaxLength="3" sap:display-format="NonNegative" sap:label="ISO Code Num. 3" sap:quickinfo="ISO Country Code Numeric 3-Characters"/>
+            </EntityType>
+            <EntityType Name="I_DistributionChannelValueHelpType" sap:label="Distribution Channel Value Help" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="SalesOrganization"/>
+                    <PropertyRef Name="DistributionChannel"/>
+                </Key>
+                <Property Name="SalesOrganization" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="Sales Organization"/>
+                <Property Name="DistributionChannel" Type="Edm.String" Nullable="false" MaxLength="2" sap:display-format="UpperCase" sap:text="DistributionChannelText" sap:label="Distribution Channel"/>
+                <Property Name="DistributionChannelText" Type="Edm.String" MaxLength="20" sap:label="Distribution Channel Description"/>
+            </EntityType>
+            <EntityType Name="I_MaterialTypeTextType" sap:label="Material Type Text" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="MaterialType"/>
+                    <PropertyRef Name="Language"/>
+                </Key>
+                <Property Name="MaterialType" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="Material type"/>
+                <Property Name="Language" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Language Key"/>
+                <Property Name="MaterialTypeName" Type="Edm.String" MaxLength="25" sap:label="Material Type Desc." sap:quickinfo="Description of Material Type"/>
+            </EntityType>
+            <EntityType Name="I_MaterialVHType" sap:label="Material Value Help" sap:value-list="true" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Material"/>
+                </Key>
+                <Property Name="Material" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:text="Material_Text" sap:label="Material" sap:quickinfo="Material Number"/>
+                <Property Name="Material_Text" Type="Edm.String" MaxLength="40" sap:label="Material Description" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="MaterialType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Material type"/>
+                <Property Name="MaterialGroup" Type="Edm.String" MaxLength="9" sap:display-format="UpperCase" sap:label="Material Group"/>
+                <Property Name="MaterialBaseUnit" Type="Edm.String" MaxLength="3" sap:label="Base Unit of Measure" sap:semantics="unit-of-measure"/>
+                <Property Name="MaterialGrossWeight" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="MaterialWeightUnit" sap:label="Gross weight"/>
+                <Property Name="MaterialNetWeight" Type="Edm.Decimal" Precision="13" Scale="3" sap:unit="MaterialWeightUnit" sap:label="Net weight"/>
+                <Property Name="MaterialWeightUnit" Type="Edm.String" MaxLength="3" sap:label="Weight unit" sap:quickinfo="Weight Unit" sap:semantics="unit-of-measure"/>
+                <Property Name="MaterialManufacturerNumber" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Manufacturer" sap:quickinfo="Manufacturer number"/>
+                <Property Name="MaterialManufacturerPartNumber" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Mfr Part Number" sap:quickinfo="Manufacturer Part Number"/>
+                <Property Name="AuthorizationGroup" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Authorization Group"/>
+                <Property Name="IsBatchManagementRequired" Type="Edm.Boolean" sap:display-format="UpperCase" sap:label="Batch Management" sap:quickinfo="Batch Management Requirement Indicator"/>
+            </EntityType>
+            <EntityType Name="YMM_C_MCF_UPDATEType" sap:label="Update Material Creation" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="mcfreqno"/>
+                    <PropertyRef Name="country"/>
+                    <PropertyRef Name="busunit"/>
+                    <PropertyRef Name="matno"/>
+                </Key>
+                <Property Name="mcfreqno" Type="Edm.String" Nullable="false" MaxLength="19" sap:display-format="UpperCase" sap:label="land1" sap:quickinfo="MCF Request No" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
+                <Property Name="country" Type="Edm.String" Nullable="false" MaxLength="3" sap:display-format="UpperCase" sap:label="land1" sap:quickinfo="Country/Region Key" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
+                <Property Name="busunit" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="Bus Unit" sap:quickinfo="Business Unit" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="matno" Type="Edm.String" Nullable="false" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="Material Number" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
+                <Property Name="prodtype" Type="Edm.String" MaxLength="30" sap:display-format="UpperCase" sap:label="Product Type" sap:quickinfo="Product/Department Type" sap:value-list="standard"/>
+                <Property Name="source" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Source"/>
+                <Property Name="SalesOrganization" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Sales Organization" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
+                <Property Name="distchannel" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Distribution Channel" sap:creatable="false" sap:updatable="false" sap:value-list="standard"/>
+                <Property Name="createdby" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Created by" sap:quickinfo="Name of Person who Created the Object"/>
+                <Property Name="mcfstatus" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="MCF Status"/>
+                <Property Name="ProductName" Type="Edm.String" MaxLength="40" sap:label="Product Description"/>
+            </EntityType>
+            <EntityContainer Name="YGW_MM_MCF_UPDATE_SRV_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="I_ACMTrdgContrSalesOrgVH" EntityType="YGW_MM_MCF_UPDATE_SRV.I_ACMTrdgContrSalesOrgVHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="I_CountryVH" EntityType="YGW_MM_MCF_UPDATE_SRV.I_CountryVHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_DistributionChannelValueHelp" EntityType="YGW_MM_MCF_UPDATE_SRV.I_DistributionChannelValueHelpType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="I_MaterialTypeText" EntityType="YGW_MM_MCF_UPDATE_SRV.I_MaterialTypeTextType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="I_MaterialVH" EntityType="YGW_MM_MCF_UPDATE_SRV.I_MaterialVHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:content-version="1"/>
+                <EntitySet Name="YMM_C_MCF_UPDATE" EntityType="YGW_MM_MCF_UPDATE_SRV.YMM_C_MCF_UPDATEType" sap:creatable="false" sap:deletable="false" sap:content-version="1"/>
+            </EntityContainer>
+            <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+            <Annotations Target="YGW_MM_MCF_UPDATE_SRV.YMM_C_MCF_UPDATEType/mcfreqno" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Country Value Help"/>
+                        <PropertyValue Property="CollectionPath" String="I_CountryVH"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="mcfreqno"/>
+                                    <PropertyValue Property="ValueListProperty" String="Country"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Country_Text"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CountryThreeLetterISOCode"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CountryThreeDigitISOCode"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+            </Annotations>
+            <Annotations Target="YGW_MM_MCF_UPDATE_SRV.YMM_C_MCF_UPDATEType/country" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Country Value Help"/>
+                        <PropertyValue Property="CollectionPath" String="I_CountryVH"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="country"/>
+                                    <PropertyValue Property="ValueListProperty" String="Country"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Country_Text"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CountryThreeLetterISOCode"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="CountryThreeDigitISOCode"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+            </Annotations>
+            <Annotations Target="YGW_MM_MCF_UPDATE_SRV.YMM_C_MCF_UPDATEType/matno" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Material Value Help"/>
+                        <PropertyValue Property="CollectionPath" String="I_MaterialVH"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="matno"/>
+                                    <PropertyValue Property="ValueListProperty" String="Material"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Material_Text"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="MaterialType"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="MaterialGroup"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="MaterialBaseUnit"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="MaterialGrossWeight"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="MaterialNetWeight"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="MaterialWeightUnit"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="MaterialManufacturerNumber"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="MaterialManufacturerPartNumber"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="AuthorizationGroup"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="IsBatchManagementRequired"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+            </Annotations>
+            <Annotations Target="YGW_MM_MCF_UPDATE_SRV.YMM_C_MCF_UPDATEType/prodtype" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Material Type Text"/>
+                        <PropertyValue Property="CollectionPath" String="I_MaterialTypeText"/>
+                        <PropertyValue Property="SearchSupported" Bool="false"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="prodtype"/>
+                                    <PropertyValue Property="ValueListProperty" String="MaterialType"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="Language"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="MaterialTypeName"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+            </Annotations>
+            <Annotations Target="YGW_MM_MCF_UPDATE_SRV.YMM_C_MCF_UPDATEType/SalesOrganization" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Sales Organization Value Help"/>
+                        <PropertyValue Property="CollectionPath" String="I_ACMTrdgContrSalesOrgVH"/>
+                        <PropertyValue Property="SearchSupported" Bool="false"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="SalesOrganization"/>
+                                    <PropertyValue Property="ValueListProperty" String="SalesOrganization"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="SalesOrganizationName"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+            </Annotations>
+            <Annotations Target="YGW_MM_MCF_UPDATE_SRV.YMM_C_MCF_UPDATEType/distchannel" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ValueList">
+                    <Record>
+                        <PropertyValue Property="Label" String="Distribution Channel Value Help"/>
+                        <PropertyValue Property="CollectionPath" String="I_DistributionChannelValueHelp"/>
+                        <PropertyValue Property="SearchSupported" Bool="true"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="SalesOrganization"/>
+                                    <PropertyValue Property="ValueListProperty" String="SalesOrganization"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="distchannel"/>
+                                    <PropertyValue Property="ValueListProperty" String="DistributionChannel"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="DistributionChannelText"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+            </Annotations>
+            <Annotations Target="YGW_MM_MCF_UPDATE_SRV.YGW_MM_MCF_UPDATE_SRV_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+                <Annotation Term="Aggregation.ApplySupported">
+                    <Record>
+                        <PropertyValue Property="Transformations">
+                            <Collection>
+                                <String>aggregate</String>
+                                <String>groupby</String>
+                                <String>filter</String>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Rollup" EnumMember="None"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="YGW_MM_MCF_UPDATE_SRV.YMM_C_MCF_UPDATEType/busunit" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+            </Annotations>
+            <Annotations Target="YGW_MM_MCF_UPDATE_SRV.YMM_C_MCF_UPDATEType/source" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+            </Annotations>
+            <Annotations Target="YGW_MM_MCF_UPDATE_SRV.I_DistributionChannelValueHelpType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.SemanticKey">
+                    <Collection>
+                        <PropertyPath>DistributionChannel</PropertyPath>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="YGW_MM_MCF_UPDATE_SRV.YMM_C_MCF_UPDATEType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.SemanticKey">
+                    <Collection>
+                        <PropertyPath>matno</PropertyPath>
+                        <PropertyPath>busunit</PropertyPath>
+                        <PropertyPath>country</PropertyPath>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <atom:link rel="self" href="http://kulhdb01d.dksh.com:8000/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="http://kulhdb01d.dksh.com:8000/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

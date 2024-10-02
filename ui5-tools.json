@@ -1,0 +1,19 @@
+{
+  "deployer": {
+    "type": "Gateway",
+    "options": {
+      "conn": {
+        "server": "https://kulhdb01d.dksh.com:44300",
+        "client": "100"
+      },
+      "ui5": {
+        "language": "EN",
+        "package": "YMM",
+        "bspcontainer": "YMM_WA_MCFUPD",
+        "bspcontainer_text": "Material Master Update",
+        "calc_appindex": true,
+        "transportno": "D00K9F6L6R"
+      }
+    }
+  }
+}

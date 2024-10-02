@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+ <edmx:Reference Uri="../../catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='')/$value">
+  <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="../../catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='')/$value">
+  <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="../../catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='')/$value">
+  <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="../../catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='')/$value">
+  <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="../../catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='')/$value">
+  <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="../../catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='')/$value">
+  <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+ </edmx:Reference>
+ <edmx:Reference Uri="../../../sap/ygw_mm_mcf_update_srv/$metadata">
+  <edmx:Include Namespace="YGW_MM_MCF_UPDATE_SRV" Alias="SAP"/>
+ </edmx:Reference>
+ <edmx:DataServices>
+  <Schema Namespace="ygw_mm_mcf_update_anno_mdl.v1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+   <Annotations Target="YGW_MM_MCF_UPDATE_SRV.I_CountryVHType/Description">
+    <Annotation Term="UI.Hidden"/>
+   </Annotations>
+   <Annotations Target="YGW_MM_MCF_UPDATE_SRV.I_MaterialVHType/MaterialGrossWeight"/>
+   <Annotations Target="YGW_MM_MCF_UPDATE_SRV.I_MaterialVHType/MaterialNetWeight"/>
+   <Annotations Target="YGW_MM_MCF_UPDATE_SRV.YMM_C_MCF_UPDATEType/ProductName">
+    <Annotation Term="UI.Hidden"/>
+   </Annotations>
+   <Annotations Target="YGW_MM_MCF_UPDATE_SRV.YMM_C_MCF_UPDATEType">
+    <Annotation Term="UI.Facets">
+     <Collection>
+      <Record Type="UI.CollectionFacet">
+       <PropertyValue Property="Label" String="General Data"/>
+       <PropertyValue Property="ID" String="idStandardMaterial"/>
+       <PropertyValue Property="Facets">
+        <Collection>
+         <Record Type="UI.ReferenceFacet">
+          <PropertyValue Property="Label" String="Basic Data"/>
+          <PropertyValue Property="ID" String="idMaterialInput"/>
+          <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#inBasicData"/>
+         </Record>
+        </Collection>
+       </PropertyValue>
+      </Record>
+     </Collection>
+    </Annotation>
+    <Annotation Term="UI.HeaderFacets">
+     <Collection>
+      <Record Type="UI.ReferenceFacet">
+       <PropertyValue Property="Label" String="Material Master Update"/>
+       <PropertyValue Property="ID" String="idDocHead"/>
+       <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#hdMaterialMaster"/>
+      </Record>
+     </Collection>
+    </Annotation>
+    <Annotation Term="UI.FieldGroup" Qualifier="inBasicData">
+     <Record>
+      <PropertyValue Property="Data">
+       <Collection>
+        <Record Type="UI.DataField">
+         <PropertyValue Property="Value" Path="mcfreqno"/>
+        </Record>
+       </Collection>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+    <Annotation Term="UI.HeaderInfo">
+     <Record>
+      <PropertyValue Property="TypeName" String="Material Master Update"/>
+      <PropertyValue Property="TypeNamePlural" String="MM Update"/>
+      <PropertyValue Property="Title">
+       <Record Type="UI.DataField">
+        <PropertyValue Property="Value" Path="mcfreqno"/>
+       </Record>
+      </PropertyValue>
+      <PropertyValue Property="Description">
+       <Record Type="UI.DataField">
+        <PropertyValue Property="Value" Path="ProductName"/>
+       </Record>
+      </PropertyValue>
+     </Record>
+    </Annotation>
+    <Annotation Term="UI.Identification">
+     <Collection>
+      <Record Type="UI.DataField">
+       <PropertyValue Property="Label" String="Country"/>
+       <PropertyValue Property="Value" Path="mcfreqno"/>
+       <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+      </Record>
+     </Collection>
+    </Annotation>
+    <Annotation Term="UI.LineItem">
+     <Collection>
+      <Record Type="UI.DataField">
+       <PropertyValue Property="Value" Path="mcfreqno"/>
+       <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+      </Record>
+      <Record Type="UI.DataField">
+       <PropertyValue Property="Value" Path="country"/>
+       <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+      </Record>
+      <Record Type="UI.DataField">
+       <PropertyValue Property="Value" Path="busunit"/>
+       <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+      </Record>
+      <Record Type="UI.DataField">
+       <PropertyValue Property="Value" Path="matno"/>
+       <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+      </Record>
+      <Record Type="UI.DataField">
+       <PropertyValue Property="Value" Path="prodtype"/>
+       <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+      </Record>
+      <Record Type="UI.DataField">
+       <PropertyValue Property="Value" Path="source"/>
+       <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+      </Record>
+      <Record Type="UI.DataField">
+       <PropertyValue Property="Value" Path="SalesOrganization"/>
+       <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+      </Record>
+      <Record Type="UI.DataField">
+       <PropertyValue Property="Value" Path="distchannel"/>
+       <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+      </Record>
+      <Record Type="UI.DataField">
+       <PropertyValue Property="Value" Path="createdby"/>
+       <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+      </Record>
+      <Record Type="UI.DataField">
+       <PropertyValue Property="Value" Path="mcfstatus"/>
+       <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+      </Record>
+     </Collection>
+    </Annotation>
+    <Annotation Term="UI.SelectionFields">
+     <Collection>
+      <PropertyPath>country</PropertyPath>
+      <PropertyPath>busunit</PropertyPath>
+      <PropertyPath>matno</PropertyPath>
+      <PropertyPath>prodtype</PropertyPath>
+      <PropertyPath>source</PropertyPath>
+      <PropertyPath>SalesOrganization</PropertyPath>
+      <PropertyPath>distchannel</PropertyPath>
+     </Collection>
+    </Annotation>
+   </Annotations>
+  </Schema>
+ </edmx:DataServices>
+</edmx:Edmx>
