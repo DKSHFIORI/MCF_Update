@@ -1,0 +1,12 @@
+<core:FragmentDefinition 
+    xmlns:core="sap.ui.core" 
+    xmlns="sap.m" 
+    xmlns:u="sap.ui.unified"><VBox id="idAttVBox"><Panel id="idAttPanel" expanded="true" ><u:FileUploader
+                id="idAttFileUploader"
+                name="myFileUpload"
+                uploadUrl="upload/"
+                tooltip="Upload your file to the local server"
+                uploadComplete="handleUploadComplete"/><Button
+                id="idUploadFileAttButton"
+                text="Upload File"
+                press="handleUploadPress"/></Panel></VBox></core:FragmentDefinition>
