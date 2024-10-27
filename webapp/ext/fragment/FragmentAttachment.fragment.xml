@@ -2,20 +2,21 @@
     xmlns:core="sap.ui.core" 
     xmlns="sap.m" 
     xmlns:u="sap.ui.unified">
-    <VBox id="idAttVBox">  
-        <Panel id="idAttPanel" expanded="true" >
-            <u:FileUploader
+    <!-- <VBox id="idAttVBox">   -->
+        <!-- <Panel id="idAttPanel" expanded="true" > -->
+            <core:ComponentContainer id="idattachmentComponentContainer" propagateModel="true" />
+            <!-- <u:FileUploader
                 id="idFileUploader"
                 name="myFileUpload"
                 uploadUrl="/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet/"
                 tooltip="Upload your file to the local server"
                 useMultipart="false"
-                uploadComplete="handleUploadComplete"/>
+                uploadComplete="handleUploadComplete"/> -->
             <!-- <Button
                 id="idUploadFileAttButton"
                 text="Upload File"
                 press="handleUploadPress"/> -->
-        </Panel>  
-    </VBox>
+        <!-- </Panel>   -->
+    <!-- </VBox> -->
 
 </core:FragmentDefinition>

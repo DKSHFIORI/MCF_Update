@@ -1,10 +1,4 @@
 <core:FragmentDefinition 
     xmlns:core="sap.ui.core" 
     xmlns="sap.m" 
-    xmlns:u="sap.ui.unified"><VBox id="idAttVBox"><Panel id="idAttPanel" expanded="true" ><u:FileUploader
-                id="idFileUploader"
-                name="myFileUpload"
-                uploadUrl="/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet/"
-                tooltip="Upload your file to the local server"
-                useMultipart="false"
-                uploadComplete="handleUploadComplete"/></Panel></VBox></core:FragmentDefinition>
+    xmlns:u="sap.ui.unified"><core:ComponentContainer id="idattachmentComponentContainer" propagateModel="true" /></core:FragmentDefinition>

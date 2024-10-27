@@ -1,0 +1,1 @@
+sap.ui.define(["sap/ui/base/ManagedObject"],(function(e){"use strict";return e.extend("dksh.ymm.mcfupdate.mcfupdate.model.formatter",{})}));
