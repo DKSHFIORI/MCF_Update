@@ -5,15 +5,16 @@
     <VBox id="idAttVBox">  
         <Panel id="idAttPanel" expanded="true" >
             <u:FileUploader
-                id="idAttFileUploader"
+                id="idFileUploader"
                 name="myFileUpload"
-                uploadUrl="upload/"
+                uploadUrl="/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet/"
                 tooltip="Upload your file to the local server"
+                useMultipart="false"
                 uploadComplete="handleUploadComplete"/>
-            <Button
+            <!-- <Button
                 id="idUploadFileAttButton"
                 text="Upload File"
-                press="handleUploadPress"/>
+                press="handleUploadPress"/> -->
         </Panel>  
     </VBox>
 

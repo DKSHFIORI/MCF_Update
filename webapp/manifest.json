@@ -74,6 +74,7 @@
                 "sap.suite.ui.generic.template": {}
             }
         },
+
         "contentDensities": {
             "compact": true,
             "cozy": true
@@ -132,33 +133,13 @@
                     "sap.suite.ui.generic.template.ObjectPage.view.Details": {
                             "controllerName": "dksh.ymm.mcfupdate.mcfupdate.ext.controller.ObjectPageExt",
                             "sap.ui.generic.app": {
-                                "YMM_C_MCF_UPDATE": {
-                                    "EntitySet": "YMM_C_MCF_UPDATE",
-                                    "Header": {
-                                        "Actions": {
-                                            "SaveDraft":{
-                                                "id" : "SaveDraftButton",
-                                                "text" : "Save as Draft",
-                                                "press" : "onSaveDraft",
-                                                "requiresSelection": false
-                                            }
-                                        }
-                                    }
-                                }
+                                
                             }
                         }
                 },
 
                 "sap.ui.viewExtensions": {
                     "sap.suite.ui.generic.template.ObjectPage.view.Details": {
-                        "AfterFacet|YMM_C_MCF_UPDATE|idStandardMaterial": {
-                            "type": "XML",
-                            "className": "sap.ui.core.Fragment",
-                            "fragmentName": "dksh.ymm.mcfupdate.mcfupdate.ext.fragment.FragmentUpload",
-                            "sap.ui.generic.app": {
-                                "title": "{i18n>ExtViewName}"
-                            }
-                        },
                         "AfterFacet|YMM_C_MCF_UPDATE|idOthers": {
                             "type": "XML",
                             "className": "sap.ui.core.Fragment",
@@ -179,7 +160,10 @@
             "forceGlobalRefresh": false,
             "objectPageHeaderType": "Dynamic",
             "considerAnalyticalParameters": true,
-            "showDraftToggle": false
+            "showDraftToggle": true,
+            "draftSettings": {
+               "dataSaveFrequency": "immediate"
+            }
         },
         "pages": {
             "ListReport|YMM_C_MCF_UPDATE": {
