@@ -9,7 +9,7 @@ sap.ui.define([
         },
 
         onAfterRendering: function(){
-            console.log("TEST");
+            
         }
 
     };

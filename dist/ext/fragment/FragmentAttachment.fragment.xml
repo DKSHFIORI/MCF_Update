@@ -1,4 +1,41 @@
 <core:FragmentDefinition 
     xmlns:core="sap.ui.core" 
     xmlns="sap.m" 
-    xmlns:u="sap.ui.unified"><core:ComponentContainer id="idattachmentComponentContainer" propagateModel="true" /></core:FragmentDefinition>
+    xmlns:u="sap.ui.unified"
+    xmlns:upload="sap.m.upload"
+    ><VBox id="idAttVBox"><Panel id="idAttPanel" expanded="true" ><upload:UploadSet
+				id="idItemsUploadSet"
+				instantUpload="false"
+				showIcons="false"
+				uploadEnabled="true"
+				terminationEnabled="true"
+				fileTypes="txt,doc,docx,xls,xlsx,png,jpg,jpeg,pdf"
+				maxFileNameLength="30"
+                selectionChanged="onSelectionChangeAttachment"
+				maxFileSize="20"
+                uploadUrl="/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet/"
+                items="{path: 'localModel>/items', templateShareable: false}"
+				mediaTypes="text/plain,application/msword,
+                            application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                            image/png,
+                            image/jpeg,
+                            application/msexcel,
+                            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                            application/pdf"
+				
+                beforeUploadStarts="onBeforeUploadStarts"
+                afterItemAdded="onAfterItemAdded"
+                uploadCompleted="onUploadCompleted"><upload:uploader><upload:Uploader uploadUrl="/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet/" useMultipart="false"/></upload:uploader><upload:toolbar><OverflowToolbar><ToolbarSpacer/><Button
+                            id="uploadSelectedButton"
+                            text="Upload selected"
+                            press="onUploadSelectedButton"/><Button
+                            id="downloadSelectedButton"
+                            text="Download selected"
+                            press="onDownloadSelectedButton"/><Button
+                            id="versionButton"
+                            enabled="false"
+                            text="Upload a new version"
+                            press="onVersionUpload"/></OverflowToolbar></upload:toolbar><upload:items><upload:UploadSetItem
+                        fileName="{localModel>Filename}"
+                        mediaType="{localModel>MimeType}"
+                        uploadState="{localModel>uploadState}"></upload:UploadSetItem></upload:items></upload:UploadSet></Panel></VBox></core:FragmentDefinition>

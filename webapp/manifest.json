@@ -61,9 +61,9 @@
         }
     },
     "sap.ui5": {
-        "flexEnabled": true,
+        "flexEnabled": false,
         "dependencies": {
-            "minUI5Version": "1.128.1",
+            "minUI5Version": "1.84.39",
             "libs": {
                 "sap.m": {},
                 "sap.ui.core": {},
@@ -72,19 +72,7 @@
                 "sap.ui.comp": {},
                 "sap.ui.generic.app": {},
                 "sap.suite.ui.generic.template": {}
-			},
-            "components": {
-                "sap.se.mi.plm.lib.attachmentservice.attachment": {
-                    "lazy": true
-                }
-            }
-        },
-
-        "componentUsages": {
-            "attachmentReuseComponent": {
-                "name": "sap.se.mi.plm.lib.attachmentservice.attachment",
-                "settings": {}
-            }
+			}
         },
 
         "contentDensities": {
@@ -202,18 +190,6 @@
                             "name": "sap.suite.ui.generic.template.ObjectPage",
                             "settings": {
                                 "navToListOnSave": true
-                            }
-                        },
-                        "embeddedComponents": {
-                            "simple::Attachments": {
-                                "id": "simple::Attachments",
-                                "componentName": "sap.se.mi.plm.lib.attachmentservice.attachment.components.stcomponent",
-                                "title": "{{Attachments}}",
-                                "settings": {
-                                    "mode": "C",
-                                    "objectType": "YMM_C_MCF_UPDATE",
-                                    "objectKey": "{parts:[{path:'Country'},{path:'Product'}],formatter:'dksh.ymm.mcfupdate.mcfupdate.model.formatter.returnAttachmentKey'}"
-                                }
                             }
                         }
                     }
