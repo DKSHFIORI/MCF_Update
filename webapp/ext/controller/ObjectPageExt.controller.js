@@ -9,8 +9,9 @@ sap.ui.define([
     "sap/ui/core/library",
     "sap/m/library",
     "sap/m/UploadCollectionParameter",
+    "sap/ui/core/Item",
     "sap/m/MessageBox"
-], function(MessageToast, JSONModel, Fragment, Core, BusyDialog, coreLibrary, MobileLibrary, UploadCollectionParameter, MessageBox) {
+], function(MessageToast, JSONModel, Fragment, Core, BusyDialog, coreLibrary, MobileLibrary, UploadCollectionParameter, Item, MessageBox) {
     'use strict';
 
     var MessageType = coreLibrary.MessageType;
@@ -23,7 +24,8 @@ sap.ui.define([
 
             // Create a JSON model to hold file data locally
             const oLocalModel = new JSONModel({
-                items: []
+                items: [],
+                attachments: []
             });
             this.getView().setModel(oLocalModel, "localModel");
         },
@@ -133,7 +135,7 @@ sap.ui.define([
         onStartUpload: function(){
             // Get the data from the local model and send it to the OData service
             const oLocalModel = this.getView().getModel("localModel");
-            const aItems = oLocalModel.getProperty("/items");
+            const aItems = oLocalModel.getProperty("/attachments");
 
             // Process each file in aItems to send to the backend
             aItems.forEach(file => {
@@ -188,76 +190,178 @@ sap.ui.define([
         },
 
         onUploadCompleted: function() {
-            var that = this;
-            that.i += 1;
-            if (that.i === that.iIncompleteItems) { //turn off busy indicator when all attachments have completed uploading
-              that.byId(__attachmentTable).setBusy(false);
-            }
+            const model = this.getView().getModel();
+            model.refresh(); // Refresh the model to get updated data after upload
+            
+         },
+
+         tryUpload: function(){
+            this.onStartUpload();
          },
 
          _uploadFileToOData: function (file) {
-            const oDataModel = this.getView().getModel();
-            var vCsrfToken = this.getView().getModel().getSecurityToken();
+            var that = this;
+            let oFileUploader = this.byId("fileUploader");
+            const oModel = this.getView().getModel(); // ODataModel instance
+            const oLocalModel = this.getView().getModel("localModel");
+            const aAttachments = oLocalModel.getProperty("/attachments") || [];
             var vProduct = this.getView().getBindingContext().getObject().Product;
-            
-            // If content is base64, remove the data prefix if it exists
-            const base64Content = file.content.includes(",") ? file.content.split(",")[1] : file.content;
 
-            oDataModel.create("/UploadFileSet", {
-                FileName: file.fileName,
-                MimeType: file.mediaType,
-                Content: base64Content // Base64 encoded content
-            }, {
-                headers: {
-                    "X-CSRF-Token": vCsrfToken, // CSRF Token
-                    "Slug": encodeURIComponent(file.fileName), // File name in Slug
-                    "Content-Transfer-Encoding": "base64", // Indicates content is in base64 format
-                    "Content-Type": file.mediaType, // MIME type of the file
-                    "Material": vProduct
-                },
-                success: function () {
-                    sap.m.MessageToast.show("File uploaded successfully!");
-                },
-                error: function (oError) {
-                    console.error("Error response:", oError.responseText || oError.message || oError);
-                    sap.m.MessageToast.show("File upload failed.");
-                }
+            if (aAttachments.length === 0) {
+                sap.m.MessageToast.show("No attachments to upload.");
+                return;
+            }
+
+            // Get CSRF token
+            var csrfToken = this.getView().getModel().getSecurityToken();
+
+            aAttachments.forEach((fileData) => {
+                csrfToken = that.getView().getModel().getSecurityToken();
+
+                let oHeaderParamCSRF = new sap.ui.unified.FileUploaderParameter();
+                oHeaderParamCSRF.setName('x-csrf-token');
+                oHeaderParamCSRF.setValue(csrfToken);
+
+                //Provide Slug
+                let oHeaderParamSlug = new sap.ui.unified.FileUploaderParameter();
+                oHeaderParamSlug.setName("slug");
+                oHeaderParamSlug.setValue(encodeURIComponent(fileData.Filename));
+
+                //Add Content Type MAterial
+                let oHeaderParamMaterial = new sap.ui.unified.FileUploaderParameter();
+                oHeaderParamMaterial.setName("Material");
+                oHeaderParamMaterial.setValue(vProduct);
+
+                // Set the upload URL dynamically if needed
+                oFileUploader.setUploadUrl("/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet");
+
+                // Add headers
+                oFileUploader.checkFileReadable().then(function() {
+                    oFileUploader.addHeaderParameter(oHeaderParamCSRF);
+                    oFileUploader.addHeaderParameter(oHeaderParamSlug);
+                    oFileUploader.addHeaderParameter(oHeaderParamMaterial);
+                    oFileUploader.upload();
+                    oFileUploader.destroyHeaderParameters();
+                }, function(error) {
+                    MessageBox.error("The file cannot be read. It may have changed.");
+                    this._oBusyDialog.close();
+                }).then(function(oData) {
+                    oFileUploader.clear();
+                });
+
             });
+
+            // Clear the local attachments model after upload
+            oLocalModel.setProperty("/attachments", []);
+            oLocalModel.updateBindings();
+        },
+
+        _base64ToBlob: function (base64, mimeType) {
+            const byteCharacters = atob(base64);
+            const byteArrays = [];
+        
+            for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+                const slice = byteCharacters.slice(offset, offset + 512);
+                const byteNumbers = new Array(slice.length);
+                for (let i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+        
+            return new Blob(byteArrays, { type: mimeType });
         },
 
          onAfterItemAdded: function (oEvent) {
-            // Add the uploaded item to the local model instead of sending it directly to the backend
-            const oItem = oEvent.getParameter("item");
+
+            const model = this.getView().getModel(); // ODataModel instance
+            const item = oEvent.getParameter("item"); // UploadSetItem instance
+             // Get the local model and existing items
             const oLocalModel = this.getView().getModel("localModel");
-            const aItems = oLocalModel.getProperty("/items");
-
-            // Fallback values to prevent null or undefined values
-            const sFileName = oItem.getFileName() || "Unnamed File";
-            const sMediaType = oItem.getMediaType() || "application/octet-stream";
-
-            // Retrieve the actual file object
-            const oFile = oItem.getFileObject();
-
-            // Use FileReader to read the file content
-            const oReader = new FileReader();
-            oReader.onload = function (e) {
-                // File content in base64 format
-                const sFileContent = e.target.result;
-
-                // Create an object representing the file data
-                const oNewItem = {
-                    fileName: sFileName,
-                    mediaType: sMediaType,
-                    content: sFileContent // This is now in base64 format
-                };
-
-                // Push the new item into the local array
-                aItems.push(oNewItem);
-                oLocalModel.setProperty("/items", aItems);
+            if (!oLocalModel) {
+                oLocalModel = new sap.ui.model.json.JSONModel({ items: [] });
+                this.getView().setModel(oLocalModel, "localModel");
             };
+            const aItems = oLocalModel.getProperty("/items") || [];
+            const uploadSet = this.byId("idItemsUploadSet"); // Assuming "UploadSet" is the ID of your UploadSet control
+            const staticUploadUrl = "/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet";
 
-            // Read the file as a base64 encoded string
-            oReader.readAsDataURL(oFile);
+            // Set the static upload URL for the item
+            uploadSet.setUploadUrl(staticUploadUrl);
+
+            // Add CSRF token header
+            var vCsrfToken = this.getView().getModel().getSecurityToken();
+            uploadSet.addHeaderField(new Item({ 
+                                        key: "X-CSRF-Token", 
+                                        text: vCsrfToken 
+                                    })
+                                );
+
+            // Add the Slug header with the file name
+            uploadSet.addHeaderField(new Item({ 
+                                        key: "Slug", 
+                                        text: encodeURIComponent(item.getFileName()) 
+                                    })
+                                );
+
+            // Add the Content-Type header with the MIME type of the file
+            uploadSet.addHeaderField(new Item({ 
+                                        key: "Content-Type", 
+                                        text: item.getMediaType() 
+                                    })
+                                );
+                 
+
+            // Start uploading the item
+            uploadSet.uploadItem(item);
+
+
+            // Add file metadata to the local model
+            // const oNewItem = {
+            //     fileName: item.getFileName(),
+            //     mediaType: item.getMediaType(),
+            //     uploadUrl: staticUploadUrl,
+            //     csrfToken: vCsrfToken,
+            //     slug: encodeURIComponent(item.getFileName()),
+            //     content: item // Store the item object for later use in uploading
+            // };
+
+            // aItems.push(oNewItem);
+            // oLocalModel.setProperty("/items", aItems);
+
+            // // Add the uploaded item to the local model instead of sending it directly to the backend
+            // const oItem = oEvent.getParameter("item");
+            // const oLocalModel = this.getView().getModel("localModel");
+            // const aItems = oLocalModel.getProperty("/items");
+
+            // // Fallback values to prevent null or undefined values
+            // const sFileName = oItem.getFileName() || "Unnamed File";
+            // const sMediaType = oItem.getMediaType() || "application/octet-stream";
+
+            // // Retrieve the actual file object
+            // const oFile = oItem.getFileObject();
+
+            // // Use FileReader to read the file content
+            // const oReader = new FileReader();
+            // oReader.onload = function (e) {
+            //     // File content in base64 format
+            //     const sFileContent = e.target.result;
+
+            //     // Create an object representing the file data
+            //     const oNewItem = {
+            //         fileName: sFileName,
+            //         mediaType: sMediaType,
+            //         content: sFileContent // This is now in base64 format
+            //     };
+
+            //     // Push the new item into the local array
+            //     aItems.push(oNewItem);
+            //     oLocalModel.setProperty("/items", aItems);
+            // };
+
+            // // Read the file as a base64 encoded string
+            // oReader.readAsDataURL(oFile);
 
             // // Extract data from the item
             // const oNewItem = {
@@ -373,83 +477,30 @@ sap.ui.define([
           Function to handle uploading of file when Upload Button is pressed
         */
         handleUploadPress: function () {
-            var that = this;
+            var oFileUploader = this.byId("fileUploader");
+                var oDomRef = oFileUploader.getDomRef();
+                var oFileInput = oDomRef.querySelector('input[type="file"]');
+                var oFile = oFileInput ? oFileInput.files[0] : null;
+                if (oFile) {
+                    var reader = new FileReader();
+                    let file = oFile;
+                    reader.onload = function (e) {
+                        var base64String = e.target.result.split(',')[1];
 
-            let oFileUploader = this.byId("idFileUploader");
-            
-            if (this.selectedFiles.length === 0) {
-                MessageBox.error("Please select files to upload.");
-                return;
-            }
-            
-            var vProduct = that.getView().getBindingContext().getObject().Product;
-            this.csrfToken = this.getView().getModel().getSecurityToken();
-            
+                        let fileDetails = this.byId("fileUploader").getDomRef().querySelector('input[type="file"]').files[0];
+                        let fileWithData = {
+                            Filename: fileDetails.name,
+                            Mimetype: fileDetails.type,
+                            Content: base64String
+                        };
+                        let localModel = this.getView().getModel('localModel');
+                        localModel.getProperty('/attachments').push(fileWithData);
+                        localModel.updateBindings();
+                        this.byId("fileUploader").clear();
+                    }.bind(this);
 
-            // Loop through selected files and upload them one by one
-            that.selectedFiles.forEach((file, index) => {
-                // Create a new FileUploader instance for each file
-                // let oUploader = new sap.ui.unified.FileUploader({
-                //     sendXHR: true,
-                //     uploadUrl: "/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet",
-                //     name: file.name,
-                //     useMultipart: false,
-                //     value: file
-                // });
-
-                oFileUploader.setValue(file.name);
-
-                //Provide CSRF Token
-                let oHeaderParamCSRF = new sap.ui.unified.FileUploaderParameter();
-                oHeaderParamCSRF.setName('x-csrf-token');
-                oHeaderParamCSRF.setValue(this.csrfToken);
-                
-                //Provide Slug
-                let oHeaderParamSlug = new sap.ui.unified.FileUploaderParameter();
-                oHeaderParamSlug.setName("slug");
-                oHeaderParamSlug.setValue(oFileUploader.getValue());
-    
-                //Add Content Type MAterial
-                let oHeaderParamMaterial = new sap.ui.unified.FileUploaderParameter();
-                oHeaderParamMaterial.setName("Material");
-                oHeaderParamMaterial.setValue(vProduct);
-
-                // Add headers
-                oFileUploader.checkFileReadable().then(function() {
-                    oFileUploader.addHeaderParameter(oHeaderParamCSRF);
-                    oFileUploader.addHeaderParameter(oHeaderParamSlug);
-                    oFileUploader.addHeaderParameter(oHeaderParamMaterial);
-                    oFileUploader.upload();
-                    oFileUploader.destroyHeaderParameters();
-                }, function(error) {
-                    MessageBox.error("The file cannot be read. It may have changed.");
-                    this._oBusyDialog.close();
-                }).then(function(oData) {
-                    oFileUploader.clear();
-                });
-
-
-                // oUploader.addHeaderParameter(oHeaderParamCSRF);
-                // oUploader.addHeaderParameter(oHeaderParamSlug);
-                // oUploader.addHeaderParameter(oHeaderParamMaterial);
-                // oUploader.upload();
-                // oUploader.destroyHeaderParameters();
-                // Check if the file is readable and upload it
-                // oUploader.checkFileReadable().then(function () {
-                //     oUploader.upload(); // Start upload for this file
-                // }).catch(function (error) {
-                //     MessageBox.error("The file " + file.name + " cannot be read. It may have changed.");
-                // }).finally(function () {
-                //     // Clean up after upload
-                //     oUploader.destroyHeaderParameters();
-
-                //     // Close busy dialog after the last file is uploaded
-                //     if (index === that.selectedFiles.length - 1) {
-                //         that._oBusyDialog.close();
-                //     }
-                // });
-            });
-  
+                    reader.readAsDataURL(oFile);
+                }
         },
 
         deleteAttachments: function (oEvent) {
@@ -479,6 +530,9 @@ sap.ui.define([
             let that = this;
             let xmlResponse = oEvent.mParameters.responseRaw;
             let errorMessage = this.extractErrorMessage(xmlResponse);
+
+            const model = this.getView().getModel();
+            model.refresh(); // Refresh the model to get updated data after upload
             
             if(errorMessage.length > 0){
                 for (var i = 0; i < errorMessage.length; i++) {

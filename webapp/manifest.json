@@ -61,9 +61,9 @@
         }
     },
     "sap.ui5": {
-        "flexEnabled": false,
+        "flexEnabled": true,
         "dependencies": {
-            "minUI5Version": "1.84.39",
+            "minUI5Version": "1.128.1",
             "libs": {
                 "sap.m": {},
                 "sap.ui.core": {},
@@ -72,9 +72,8 @@
                 "sap.ui.comp": {},
                 "sap.ui.generic.app": {},
                 "sap.suite.ui.generic.template": {}
-			}
+            }
         },
-
         "contentDensities": {
             "compact": true,
             "cozy": true
@@ -133,7 +132,12 @@
                     "sap.suite.ui.generic.template.ObjectPage.view.Details": {
                             "controllerName": "dksh.ymm.mcfupdate.mcfupdate.ext.controller.ObjectPageExt",
                             "sap.ui.generic.app": {
-                                
+                                "YMM_C_MCF_UPDATE": {
+                                    "EntitySet": "YMM_C_MCF_UPDATE",
+                                    "Header": {
+                                        
+                                    }
+                                }
                             }
                         }
                 },
@@ -160,10 +164,7 @@
             "forceGlobalRefresh": false,
             "objectPageHeaderType": "Dynamic",
             "considerAnalyticalParameters": true,
-            "showDraftToggle": true,
-            "draftSettings": {
-               "dataSaveFrequency": "immediate"
-            }
+            "showDraftToggle": false
         },
         "pages": {
             "ListReport|YMM_C_MCF_UPDATE": {

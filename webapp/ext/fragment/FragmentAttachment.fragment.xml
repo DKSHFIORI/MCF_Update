@@ -6,18 +6,48 @@
     >
     <VBox id="idAttVBox">   
          <Panel id="idAttPanel" expanded="true" > 
+            <List id= "AttachmentsList"
+                class="sapUiSizeCompact"
+                items="{'path':'localModel>/attachments'}"
+                growing="true"
+                mode="Delete"
+                delete="deleteAttachments"
+                growingThreshold="5"
+            >
+                <headerToolbar>
+                    <Toolbar>
+                        <ToolbarSpacer />
+                    <u:FileUploader visible="{HasActiveEntity}"
+                            id="fileUploader"
+                            maximumFileSize="20"
+                            fileSizeExceed="fileSizeExceed"
+                            name="myFileUpload"
+                            uploadUrl="/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet"
+                            tooltip="Upload your file to the local server"
+                            uploadComplete="handleUploadComplete"/>
+                    <Button id="idUploadFileButton" 
+                            text="Send OData"
+                            press="tryUpload"/>
+                    <Button id="_IDGenButton2" 
+                            text="Upload File"
+                            press="handleUploadPress"/>
+                    </Toolbar>
+                </headerToolbar>
+            <StandardListItem type="Active" title="{localModel>Filename}" info="{localModel>Mimetype} {localModel>Guid}"  press="downloadAttachment"
+            />
+            </List>
 
-           <upload:UploadSet
+           <!-- <upload:UploadSet
 				id="idItemsUploadSet"
 				instantUpload="false"
 				showIcons="false"
 				uploadEnabled="true"
 				terminationEnabled="true"
 				fileTypes="txt,doc,docx,xls,xlsx,png,jpg,jpeg,pdf"
-				maxFileNameLength="30"
+				maxFileNameLength="50"
                 selectionChanged="onSelectionChangeAttachment"
 				maxFileSize="20"
-                uploadUrl="/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet/"
+                uploadUrl="/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet"
                 items="{path: 'localModel>/items', templateShareable: false}"
 				mediaTypes="text/plain,application/msword,
                             application/vnd.openxmlformats-officedocument.wordprocessingml.document,
@@ -31,7 +61,7 @@
                 afterItemAdded="onAfterItemAdded"
                 uploadCompleted="onUploadCompleted"> 
                 <upload:uploader>
-					<upload:Uploader uploadUrl="/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet/" useMultipart="false"/>
+					<upload:Uploader uploadUrl="/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet" useMultipart="false"/>
 				</upload:uploader>
                 <upload:toolbar>
                     <OverflowToolbar>
@@ -59,7 +89,7 @@
                     </upload:UploadSetItem>
                 </upload:items>
 
-                </upload:UploadSet>
+                </upload:UploadSet> -->
 
 
 
