@@ -51,7 +51,47 @@ sap.ui.define([
                 pFiRelatedChange.setVisible(false);
                 pCCDRelatedChange.setVisible(true);
             }
+
+            // Save For Later
+            this._changeType = selectedValue;
             
+        },
+
+        validateFields: function(selectedValue){
+            // Validation Logic
+            let valid = true;
+            let missingFields = [];
+
+            if (selectedValue === "Finance Related") {
+                let taxClassification = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::TaxClassification::Field-comboBoxEdit").getSelectedItem().getText();
+
+                if (!taxClassification) {
+                    valid = false;
+                    missingFields.push("Tax Classification");
+                }
+            }
+
+            if (selectedValue === "CCD Related") {
+                let hsCode = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idCCDRelatedChange::HSCode::Field-input").getValue();  
+                let importDuty = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idCCDRelatedChange::ImportDuty::Field-input").getValue();  
+
+                if (!hsCode) {
+                    valid = false;
+                    missingFields.push("HS Code");
+                }
+                if (!importDuty) {
+                    valid = false;
+                    missingFields.push("Import Duty");
+                }
+            }
+
+            // Show validation messages if fields are missing
+            if (!valid) {
+                sap.m.MessageBox.error(`The following fields are required: ${missingFields.join(", ")}`);
+                return false;
+            }
+
+            return true;
         },
 
         onSelectedCountryType: function(oEvent) {
@@ -61,9 +101,28 @@ sap.ui.define([
             
         },
 
-        beforeSaveExtension: function(){
-            
-        },
+        beforeSaveExtension: function () {
+			var fnResolve, fnReject;
+			var oPromise = new Promise(function (resolve, reject){
+				fnResolve = resolve;
+				fnReject = reject;
+			});
+
+            if(!this._changeType){
+                MessageBox.error("No Change Type was selected. Please select if Finance Related or CCD Related Change");
+                return;
+            }
+
+            let valid = this.validateFields(this._changeType);
+
+            if(valid){
+                fnResolve();
+            }else{
+                fnReject();
+            }
+			return oPromise;
+		},
+
 
         onExit: function(){
             
@@ -82,6 +141,9 @@ sap.ui.define([
 
             let pCCDRelatedChange = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idCCDChangePanel::Section");
             pCCDRelatedChange.setVisible(false);
+
+            //Submit Button Text -- altohugh localization of UI Text can be considered - for now change here
+            this.getView().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--save").setText("Submit");
 
             //Attach a function after saving
             this.extensionAPI.getTransactionController().attachAfterSave(that.onAfterSave.bind(this));
@@ -143,50 +205,6 @@ sap.ui.define([
             });
 
             MessageToast.show("Files are being uploaded.");
-
-
-            // var oHeaderParameter;
-            // let that = this;
-            // var vProduct = that.getView().getBindingContext().getObject().Product;
-
-            // var oAttachmentUpl = this.byId(__attachmentTable);
-            // var aIncompleteItems = oAttachmentUpl.getIncompleteItems();
-            // that.iIncompleteItems = aIncompleteItems.length; //used to turn off busy indicator upon completion of all pending uploads
-            // if (this.iIncompleteItems !== 0) {
-            //     oAttachmentUpl.setBusy(true);
-            //     this.i = 0; //used to turn off busy indicator when all uploads complete
-            //     for (var i = 0; i < this.iIncompleteItems; i++) {
-            //         var sFileName = aIncompleteItems[i].getProperty("fileName");
-            //         //Provide CSRF Token
-            //         let oXCSRFToken = new sap.ui.unified.FileUploaderParameter();
-            //         oXCSRFToken.setName('x-csrf-token');
-            //         oXCSRFToken.setValue(this.csrfToken);
-
-            //         let oSlug = new sap.ui.unified.FileUploaderParameter();
-            //         oXCSRFToken.setName('slug');
-            //         oXCSRFToken.setValue(sFileName);
-
-            //         let oHeaderMaterial = new sap.ui.unified.FileUploaderParameter();
-            //         oXCSRFToken.setName('Material');
-            //         oXCSRFToken.setValue(vProduct);
-
-            //         // var oXCSRFToken = new sap.ui.core.Item({
-            //         //     key: "x-csrf-Token",
-            //         //     text: that.getOwnerComponent().getModel().getSecurityToken()
-            //         // });
-            //         // var oSlug = new sap.ui.core.Item({
-            //         //     key: "slug",
-            //         //     text: sFileName
-            //         // });
-            //         // var oHeaderMaterial = new sap.ui.core.Item({
-            //         //     key: "Material",   // Replace with your header key
-            //         //     text: vProduct // Replace with your header value
-            //         // });
-            //         oAttachmentUpl.addHeaderField(oXCSRFToken).addHeaderField(oSlug).addHeaderField(oHeaderMaterial);
-            //         oAttachmentUpl.uploadItem(aIncompleteItems[i]);
-            //         oAttachmentUpl.removeAllHeaderFields(); //at least slug header field must be reset after each upload
-            //     }
-            // }
         },
 
         onUploadCompleted: function() {
@@ -195,60 +213,50 @@ sap.ui.define([
             
          },
 
-         tryUpload: function(){
-            this.onStartUpload();
-         },
-
          _uploadFileToOData: function (file) {
-            var that = this;
-            let oFileUploader = this.byId("fileUploader");
             const oModel = this.getView().getModel(); // ODataModel instance
             const oLocalModel = this.getView().getModel("localModel");
             const aAttachments = oLocalModel.getProperty("/attachments") || [];
-            var vProduct = this.getView().getBindingContext().getObject().Product;
+            const csrfToken = oModel.getSecurityToken();
+            const vProduct = this.getView().getBindingContext().getObject().Product;
 
             if (aAttachments.length === 0) {
                 sap.m.MessageToast.show("No attachments to upload.");
                 return;
             }
 
-            // Get CSRF token
-            var csrfToken = this.getView().getModel().getSecurityToken();
+            aAttachments.forEach(fileData => {
+                const uploadUrl = "/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet";
+                const file = fileData.Content; // Actual File object
 
-            aAttachments.forEach((fileData) => {
-                csrfToken = that.getView().getModel().getSecurityToken();
+                // Prepare headers
+                const headers = new Headers();
+                headers.append("X-CSRF-Token", csrfToken);
+                headers.append("Slug", encodeURIComponent(fileData.Filename));
+                headers.append("Content-Type", fileData.Mimetype);
+                headers.append("Material", vProduct);
 
-                let oHeaderParamCSRF = new sap.ui.unified.FileUploaderParameter();
-                oHeaderParamCSRF.setName('x-csrf-token');
-                oHeaderParamCSRF.setValue(csrfToken);
-
-                //Provide Slug
-                let oHeaderParamSlug = new sap.ui.unified.FileUploaderParameter();
-                oHeaderParamSlug.setName("slug");
-                oHeaderParamSlug.setValue(encodeURIComponent(fileData.Filename));
-
-                //Add Content Type MAterial
-                let oHeaderParamMaterial = new sap.ui.unified.FileUploaderParameter();
-                oHeaderParamMaterial.setName("Material");
-                oHeaderParamMaterial.setValue(vProduct);
-
-                // Set the upload URL dynamically if needed
-                oFileUploader.setUploadUrl("/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet");
-
-                // Add headers
-                oFileUploader.checkFileReadable().then(function() {
-                    oFileUploader.addHeaderParameter(oHeaderParamCSRF);
-                    oFileUploader.addHeaderParameter(oHeaderParamSlug);
-                    oFileUploader.addHeaderParameter(oHeaderParamMaterial);
-                    oFileUploader.upload();
-                    oFileUploader.destroyHeaderParameters();
-                }, function(error) {
-                    MessageBox.error("The file cannot be read. It may have changed.");
-                    this._oBusyDialog.close();
-                }).then(function(oData) {
-                    oFileUploader.clear();
+                // Use fetch to upload the file as binary data
+                fetch(uploadUrl, {
+                    method: "POST",
+                    headers: headers,
+                    body: file // Send the actual File object as the body
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // sap.m.MessageToast.show("File uploaded successfully: " + fileData.Filename);
+                        console.log(`File uploaded successfully: ${fileData.Filename}`, { title: "Files Uploaded" });
+                    } else {
+                        response.text().then(errorText => {
+                            console.error("Error uploading file:", errorText);
+                            MessageBox.error(`File uploaded error: ${errorText} ${fileData.Filename}`, { title: "Error Uploading" });
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                    sap.m.MessageToast.show("Failed to upload file: " + fileData.Filename);
                 });
-
             });
 
             // Clear the local attachments model after upload
@@ -256,22 +264,22 @@ sap.ui.define([
             oLocalModel.updateBindings();
         },
 
-        _base64ToBlob: function (base64, mimeType) {
-            const byteCharacters = atob(base64);
-            const byteArrays = [];
+    //     _base64ToBlob: function (base64, mimeType) {
+    //         const byteCharacters = atob(base64);
+    //         const byteArrays = [];
         
-            for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-                const slice = byteCharacters.slice(offset, offset + 512);
-                const byteNumbers = new Array(slice.length);
-                for (let i = 0; i < slice.length; i++) {
-                    byteNumbers[i] = slice.charCodeAt(i);
-                }
-                const byteArray = new Uint8Array(byteNumbers);
-                byteArrays.push(byteArray);
-            }
+    //         for (let offset = 0; offset < byteCharacters.length; offset += 512) {,
+	// "sap/ui/commons/Message"                const slice = byteCharacters.slice(offset, offset + 512);
+    //             const byteNumbers = new Array(slice.length);
+    //             for (let i = 0; i < slice.length; i++) {
+    //                 byteNumbers[i] = slice.charCodeAt(i);
+    //             }
+    //             const byteArray = new Uint8Array(byteNumbers);
+    //             byteArrays.push(byteArray);
+    //         }
         
-            return new Blob(byteArrays, { type: mimeType });
-        },
+    //         return new Blob(byteArrays, { type: mimeType });
+    //     },
 
          onAfterItemAdded: function (oEvent) {
 
@@ -316,63 +324,6 @@ sap.ui.define([
             // Start uploading the item
             uploadSet.uploadItem(item);
 
-
-            // Add file metadata to the local model
-            // const oNewItem = {
-            //     fileName: item.getFileName(),
-            //     mediaType: item.getMediaType(),
-            //     uploadUrl: staticUploadUrl,
-            //     csrfToken: vCsrfToken,
-            //     slug: encodeURIComponent(item.getFileName()),
-            //     content: item // Store the item object for later use in uploading
-            // };
-
-            // aItems.push(oNewItem);
-            // oLocalModel.setProperty("/items", aItems);
-
-            // // Add the uploaded item to the local model instead of sending it directly to the backend
-            // const oItem = oEvent.getParameter("item");
-            // const oLocalModel = this.getView().getModel("localModel");
-            // const aItems = oLocalModel.getProperty("/items");
-
-            // // Fallback values to prevent null or undefined values
-            // const sFileName = oItem.getFileName() || "Unnamed File";
-            // const sMediaType = oItem.getMediaType() || "application/octet-stream";
-
-            // // Retrieve the actual file object
-            // const oFile = oItem.getFileObject();
-
-            // // Use FileReader to read the file content
-            // const oReader = new FileReader();
-            // oReader.onload = function (e) {
-            //     // File content in base64 format
-            //     const sFileContent = e.target.result;
-
-            //     // Create an object representing the file data
-            //     const oNewItem = {
-            //         fileName: sFileName,
-            //         mediaType: sMediaType,
-            //         content: sFileContent // This is now in base64 format
-            //     };
-
-            //     // Push the new item into the local array
-            //     aItems.push(oNewItem);
-            //     oLocalModel.setProperty("/items", aItems);
-            // };
-
-            // // Read the file as a base64 encoded string
-            // oReader.readAsDataURL(oFile);
-
-            // // Extract data from the item
-            // const oNewItem = {
-            //     fileName: oItem.getFileName(),
-            //     mediaType: oItem.getMediaType(),
-            //     content: oItem.getFileContent() // Ensure the content is appropriately extracted
-            // };
-
-            // Push the new item into the local array
-            // aItems.push(oNewItem);
-            // oLocalModel.setProperty("/items", aItems);
         },
 
         onBeforeUploadStarts: function(){
@@ -478,6 +429,19 @@ sap.ui.define([
         */
         handleUploadPress: function () {
             var oFileUploader = this.byId("fileUploader");
+            var oDomRef = oFileUploader.getDomRef();
+            var oFileInput = oDomRef.querySelector('input[type="file"]');
+            var oFile = oFileInput ? oFileInput.files[0] : null;
+
+            if(this.byId("AttachmentsList").getItems().length > 0){
+                let existingFiles = this.byId("AttachmentsList").getItems().map(e => { return e.getTitle() })
+                if (existingFiles.indexOf(oFile.name) > -1) {
+                    MessageBox.error(`A file with the name ${oFile.name} already exists.`);
+                    return;
+                }
+            }
+
+            var oFileUploader = this.byId("fileUploader");
                 var oDomRef = oFileUploader.getDomRef();
                 var oFileInput = oDomRef.querySelector('input[type="file"]');
                 var oFile = oFileInput ? oFileInput.files[0] : null;
@@ -560,40 +524,14 @@ sap.ui.define([
                             msgType = MessageType.None; 
                     }
 
-                    // that._MessageManager.addMessages(
-                    //     new Message({
-                    //         message: messageNodes[0].textContent,
-                    //         type: msgType,//MessageType.Error,
-                    //         persistent: true,
-                    //         //additionalText: oInput.getLabels()[0].getText(),
-                    //         //target: sTarget,
-                    //         processor: that.getView().getModel("ErrorMessage")
-                    //     })
-                    // );
                 }
                 
-
-                // let errorMessageModel = this.getView().getModel("ErrorMessage");
-                // let hasErrors = errorMessageModel && errorMessageModel.getData().length > 0;
-
-                // errButton.setVisible(hasErrors);
-                // errButton.setIcon(that.buttonIconFormatter());
-                // errButton.setType(that.buttonTypeFormatter());
-                // errButton.setText(that.highestSeverityMessages());
-                // errButton.setAriaHasPopup("Dialog");
-
-                //Set Visibility of clear button
-                // clearButton.setVisible(true);
             }else{
                 MessageBox.success("Successfully Uploaded");
             }
             
             this.getOwnerComponent().getModel().refresh(true);
             this._oBusyDialog.close();   
-
-            //Close the Dialog
-            // this.oFileUploaderDialog.close();
-            // this.oFileUploaderDialog.destroy();
   
           },
 

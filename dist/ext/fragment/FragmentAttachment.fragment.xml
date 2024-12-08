@@ -17,9 +17,7 @@
                             name="myFileUpload"
                             uploadUrl="/sap/opu/odata/sap/YGW_MM_MCF_UPDATE_SRV/UploadFileSet"
                             tooltip="Upload your file to the local server"
-                            uploadComplete="handleUploadComplete"/><Button id="idUploadFileButton" 
-                            text="Send OData"
-                            press="tryUpload"/><Button id="_IDGenButton2" 
+                            uploadComplete="handleUploadComplete"/><Button id="_IDGenButton2" 
                             text="Upload File"
                             press="handleUploadPress"/></Toolbar></headerToolbar><StandardListItem type="Active" title="{localModel>Filename}" info="{localModel>Mimetype} {localModel>Guid}"  press="downloadAttachment"
             /></List></Panel></VBox></core:FragmentDefinition>
