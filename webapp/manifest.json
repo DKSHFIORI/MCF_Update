@@ -117,14 +117,6 @@
                         "controllerName": "dksh.ymm.mcfupdate.mcfupdate.ext.controller.ListReportExt",
                         "sap.ui.generic.app": {
                             "YMM_C_MCF_UPDATE": {
-                                "Actions": {
-                                    "Update": {
-                                        "id" : "btnEnterKeys",
-                                        "text" : "Update",
-                                        "press" : "onEnterKeys",
-                                        "requiresSelection": true
-                                    }
-                                },
                                 "EntitySet": "YMM_C_MCF_UPDATE"  
                             }
                         }
