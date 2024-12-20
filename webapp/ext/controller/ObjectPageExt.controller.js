@@ -62,8 +62,46 @@ sap.ui.define([
             let valid = true;
             let missingFields = [];
 
+            let businessUnit = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Businessunit::Field");
+            let country = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Country::Field");
+            let source = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Source::Field");
+            let changeType = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::ChangeType::Field");
+
+            if(!changeType){
+                valid = false;
+                missingFields.push("Change Type");
+            }
+
+            if(!country){
+                valid = false;
+                missingFields.push("Country");
+            }
+
+            if(!businessUnit){
+                valid = false;
+                missingFields.push("Business Unit");
+            }
+
+            if(!source){
+                valid = false;
+                missingFields.push("Source");
+            }
+
             if (selectedValue === "Finance Related") {
-                let taxClassification = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::TaxClassification::Field-comboBoxEdit").getSelectedItem().getText();
+                let taxClassification = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::TaxClassification::Field-comboBoxEdit");
+                let salesOrgField = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::ProductSalesOrg::Field-comboBoxEdit");
+                let distChannelField = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::ProductDistributionChnl::Field-comboBoxEdit");
+                
+
+                if(!salesOrgField){
+                    valid = false;
+                    missingFields.push("Sales Organization");
+                }
+
+                if(!distChannelField){
+                    valid = false;
+                    missingFields.push("Distribution Channel");
+                }
 
                 if (!taxClassification) {
                     valid = false;
@@ -110,7 +148,8 @@ sap.ui.define([
 
             if(!this._changeType){
                 MessageBox.error("No Change Type was selected. Please select if Finance Related or CCD Related Change");
-                return;
+                fnReject();
+                return oPromise;
             }
 
             let valid = this.validateFields(this._changeType);

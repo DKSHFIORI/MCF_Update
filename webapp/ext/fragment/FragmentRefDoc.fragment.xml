@@ -1,0 +1,21 @@
+<core:FragmentDefinition
+	xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:smartTable="sap.ui.comp.smarttable"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core" >
+
+<smartTable:SmartTable id="RefDocTable" entitySet="RefDocSet"  tableType="Table"
+        useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true"
+        useTablePersonalisation="true" header="Line Items" showRowCount="true" persistencyKey="SmartTableAnalytical_Explored"
+        enableAutoBinding="true" class="sapUiResponsiveContentPadding" enableAutoColumnWidth="true" editTogglable="false"  
+        initiallyVisibleFields="Country,Busunit,Type,ItemNo,Description">
+            <Table selectionChange="onSelect"  growing="true"/>
+            <smartTable:layoutData>
+                <FlexItemData growFactor="1"
+                 baseSize="0%"/>
+            </smartTable:layoutData>
+           
+    </smartTable:SmartTable>
+</core:FragmentDefinition>
