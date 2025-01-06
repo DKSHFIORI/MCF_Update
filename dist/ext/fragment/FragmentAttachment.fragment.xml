@@ -3,6 +3,7 @@
     xmlns="sap.m" 
     xmlns:u="sap.ui.unified"
     xmlns:upload="sap.m.upload"
+    xmlns:smartTable="sap.ui.comp.smarttable"
     ><VBox id="idAttVBox"><Panel id="idAttPanel" expanded="true" ><List id= "AttachmentsList"
                 class="sapUiSizeCompact"
                 items="{'path':'localModel>/attachments'}"

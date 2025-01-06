@@ -10,8 +10,10 @@ sap.ui.define([
     "sap/m/library",
     "sap/m/UploadCollectionParameter",
     "sap/ui/core/Item",
-    "sap/m/MessageBox"
-], function(MessageToast, JSONModel, Fragment, Core, BusyDialog, coreLibrary, MobileLibrary, UploadCollectionParameter, Item, MessageBox) {
+    "sap/m/MessageBox",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator"
+], function(MessageToast, JSONModel, Fragment, Core, BusyDialog, coreLibrary, MobileLibrary, UploadCollectionParameter, Item, MessageBox, Filter, FilterOperator) {
     'use strict';
 
     var MessageType = coreLibrary.MessageType;
@@ -132,11 +134,8 @@ sap.ui.define([
             return true;
         },
 
-        onSelectedCountryType: function(oEvent) {
-            // let that = this;
-            // let selectedValue = oEvent.getParameter("value")
-            // let taxType = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::TaxType::Field");
-            
+        _onFieldChange: function(oEvent) {
+            this.onApplyFilters();
         },
 
         beforeSaveExtension: function () {
@@ -171,9 +170,11 @@ sap.ui.define([
             var that = this;
             let sCountry = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Country::Field");
             let btn = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::ChangeType::Field");
-            
+            var oBusinessUnitField = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::BusinessUnit::Field");
+            // var oSmartTableId = "dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRefDoc--RefDocTable";
+
             btn.attachChange(that.onSelectedChangeType, that);
-            sCountry.attachChange(that.onSelectedCountryType, that);
+            sCountry.attachChange(that._onFieldChange, that);
 
             let pFiRelatedChange = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idChangePanel::Section");
             pFiRelatedChange.setVisible(false);
@@ -187,16 +188,13 @@ sap.ui.define([
             //Attach a function after saving
             this.extensionAPI.getTransactionController().attachAfterSave(that.onAfterSave.bind(this));
 
-            // //Initiate File Upload
-            // var oUploadSet = this.byId(__attachmentTable);
+            // Attach the PageDataLoaded event
+            this.extensionAPI.attachPageDataLoaded(that.onRebind.bind(this));
 
-			// oUploadSet.getList().setMode(ListMode.MultiSelect);
+            if (oBusinessUnitField) {
+                oBusinessUnitField.attachChange(this._onFieldChange.bind(this));
+            }
 
-			// // Modify "add file" button
-			// oUploadSet.getDefaultFileUploader().setButtonOnly(false);
-			// oUploadSet.getDefaultFileUploader().setTooltip("");
-			// oUploadSet.getDefaultFileUploader().setIconOnly(true);
-			// oUploadSet.getDefaultFileUploader().setIcon("sap-icon://attachment");
             
         },
 
@@ -363,6 +361,47 @@ sap.ui.define([
             // Start uploading the item
             uploadSet.uploadItem(item);
 
+        },
+
+        /**
+         * Apply filters dynamically before rebinding
+         */
+        onApplyFilters: function () {
+            var oSmartTableId = "dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRefDoc--RefDocTable";
+            var oSmartTable = this.byId(oSmartTableId);
+
+            if (!oSmartTable) {
+                console.warn("Smart Table not found!");
+                return;
+            }
+
+            //Country
+            let vCountry = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Country::Field");
+            //BusinessUnit
+            let vBusinessUnit = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::BusinessUnit::Field");
+
+            // Get current binding and apply filters
+            var oBinding = oSmartTable.getTable().getBinding("items");
+            if (oBinding) {
+                var aFilters = [];
+
+                if (vCountry) {
+                    aFilters.push(new Filter("Country", FilterOperator.EQ, vCountry.getValue()));
+                }
+                if (vBusinessUnit) {
+                    aFilters.push(new Filter("Busunit", FilterOperator.EQ, vBusinessUnit.getValue()));
+                }
+
+                oBinding.filter(aFilters);
+                oSmartTable.rebindTable();
+                console.log("Filters applied on Smart Table binding:", aFilters);
+            } else {
+                console.warn("No binding found for Smart Table!");
+            }
+        },
+
+        onRebind: function(oEvent){
+            this.onApplyFilters();
         },
 
         onBeforeUploadStarts: function(){

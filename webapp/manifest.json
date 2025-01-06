@@ -137,14 +137,23 @@
                 "sap.ui.viewExtensions": {
                     "sap.suite.ui.generic.template.ObjectPage.view.Details": {
                         "AfterFacet|YMM_C_MCF_UPDATE|idOthers": {
+                            "id"  : "idAttachments",
                             "type": "XML",
                             "className": "sap.ui.core.Fragment",
                             "fragmentName": "dksh.ymm.mcfupdate.mcfupdate.ext.fragment.FragmentAttachment",
                             "sap.ui.generic.app": {
                                 "title": "{i18n>Attachment}"
                             }
+                        },
+                        "AfterFacet|YMM_C_MCF_UPDATE|idOthers|1": {
+                            "id"  : "idRefDoc",
+                            "type": "XML",
+                            "className": "sap.ui.core.Fragment",
+                            "fragmentName": "dksh.ymm.mcfupdate.mcfupdate.ext.fragment.FragmentRefDoc",
+                            "sap.ui.generic.app": {
+                                "title": "{i18n>RefDoc}"
+                            }
                         }
-                        
                     }
                 }
             }

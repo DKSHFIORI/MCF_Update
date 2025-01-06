@@ -8,5 +8,5 @@
         useExportToExcel="true" beforeExport="onBeforeExport" useVariantManagement="true"
         useTablePersonalisation="true" header="Line Items" showRowCount="true" persistencyKey="SmartTableAnalytical_Explored"
         enableAutoBinding="true" class="sapUiResponsiveContentPadding" enableAutoColumnWidth="true" editTogglable="false"  
-        initiallyVisibleFields="Country,Busunit,Type,ItemNo,Description"><Table selectionChange="onSelect"  growing="true"/><smartTable:layoutData><FlexItemData growFactor="1"
+        initiallyVisibleFields="Country,Busunit,Type,ItemNo,Description" beforeRebindTable="onSmartTableBeforeRebindTable"><Table selectionChange="onSelect"  growing="true"/><smartTable:layoutData><FlexItemData growFactor="1"
                  baseSize="0%"/></smartTable:layoutData></smartTable:SmartTable></core:FragmentDefinition>
