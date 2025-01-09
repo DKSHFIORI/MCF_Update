@@ -137,7 +137,6 @@
                 "sap.ui.viewExtensions": {
                     "sap.suite.ui.generic.template.ObjectPage.view.Details": {
                         "AfterFacet|YMM_C_MCF_UPDATE|idOthers": {
-                            "id"  : "idAttachments",
                             "type": "XML",
                             "className": "sap.ui.core.Fragment",
                             "fragmentName": "dksh.ymm.mcfupdate.mcfupdate.ext.fragment.FragmentAttachment",

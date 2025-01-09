@@ -64,7 +64,12 @@ sap.ui.define([
             let valid = true;
             let missingFields = [];
 
-            let businessUnit = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Businessunit::Field");
+            // Helper function to fetch field safely
+            const getFieldById = (coreId, thisId) => sap.ui.getCore().byId(coreId) || this.byId(thisId);
+
+            
+
+            let businessUnit = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Businessunit::Field"); 
             let country = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Country::Field");
             let source = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Source::Field");
             let changeType = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::ChangeType::Field");
@@ -75,18 +80,29 @@ sap.ui.define([
             }
 
             if(!country){
-                valid = false;
-                missingFields.push("Country");
+                //try again this time use this.byId();
+                country = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Country::Field");
+                if(!country){
+                    valid = false;
+                    missingFields.push("Country");
+                }
             }
 
             if(!businessUnit){
-                valid = false;
-                missingFields.push("Business Unit");
+                //try again this time use this.byId();
+                businessUnit = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::BusinessUnit::Field");
+                if(!businessUnit){
+                    valid = false;
+                    missingFields.push("Business Unit");
+                }
             }
 
             if(!source){
-                valid = false;
-                missingFields.push("Source");
+                source = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Source::Field");
+                if(!source){
+                    valid = false;
+                    missingFields.push("Source");
+                }
             }
 
             if (selectedValue === "Finance Related") {
@@ -96,18 +112,27 @@ sap.ui.define([
                 
 
                 if(!salesOrgField){
-                    valid = false;
-                    missingFields.push("Sales Organization");
+                    salesOrgField = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::ProductSalesOrg::Field-comboBoxEdit");
+                    if(!salesOrgField && salesOrgField.getValue() == ''){
+                        valid = false;
+                        missingFields.push("Sales Organization");
+                    }
                 }
 
                 if(!distChannelField){
-                    valid = false;
-                    missingFields.push("Distribution Channel");
+                    distChannelField = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::ProductDistributionChnl::Field");
+                    if(!distChannelField && distChannelField.getValue() == ''){
+                        valid = false;
+                        missingFields.push("Distribution Channel");
+                    }
                 }
 
                 if (!taxClassification) {
-                    valid = false;
-                    missingFields.push("Tax Classification");
+                    taxClassification = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::TaxClassification::Field");
+                    if (!taxClassification && taxClassification.getValue() == '') {
+                        valid = false;
+                        missingFields.push("Tax Classification");
+                    }
                 }
             }
 
@@ -116,12 +141,18 @@ sap.ui.define([
                 let importDuty = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idCCDRelatedChange::ImportDuty::Field-input").getValue();  
 
                 if (!hsCode) {
-                    valid = false;
-                    missingFields.push("HS Code");
+                    hsCode = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idCCDRelatedChange::HSCode::Field-input");
+                    if (!hsCode && hsCode === '') {
+                        valid = false;
+                        missingFields.push("HS Code");
+                    }
                 }
                 if (!importDuty) {
-                    valid = false;
-                    missingFields.push("Import Duty");
+                    this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idCCDRelatedChange::ImportDuty::Field-input");
+                    if (!importDuty && importDuty.getValue() == '') {
+                        valid = false;
+                        missingFields.push("Import Duty");
+                    }
                 }
             }
 
@@ -144,6 +175,74 @@ sap.ui.define([
 				fnResolve = resolve;
 				fnReject = reject;
 			});
+
+            // var oSmartTableId = "dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRefDoc--RefDocTable";
+            // var oSmartTable = this.byId(oSmartTableId);
+
+            // if (!oSmartTable) {
+            //     console.warn("Smart Table not found!");
+            //     fnReject();
+            //     return oPromise;
+            // }
+
+            // //Country
+            // let vCountry = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Country::Field");
+            // //BusinessUnit
+            // let vBusinessUnit = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::BusinessUnit::Field");
+
+            // // Get current binding and apply filters
+            // var oBinding = oSmartTable.getTable().getBinding("items");
+
+            // //Validate Entries
+            // // Function to validate if value exists in the model
+            // const isValueInModel = (oInput, property) => {
+            //     const sValue = oInput.getValue(); // User input value
+            //     const oBinding = oInput.getBinding("suggestionItems"); // Value help binding
+
+            //     if (oBinding) {
+            //         const oModel = oBinding.getModel(); // Get the model attached to the control
+            //         const sPath = oBinding.getPath(); // Get the path of the data in the model
+
+            //         // Get all possible values from the model
+            //         const aValues = oModel.getProperty(sPath);
+            //         if (aValues && aValues.some((item) => item[property] === sValue)) {
+            //             return true; // Valid value
+            //         }
+            //     }
+            //     return false; // Invalid value
+            // };
+
+            // // Validate Country
+            // if (vCountry && !isValueInModel(vCountry, "Country")) {
+            //     MessageBox.error(
+            //         "Entered Country is not correct.",
+            //         {
+            //             icon: MessageBox.Icon.ERROR,
+            //             onClose: function(){ fnReject(); },
+            //             title: "Incorrect Entry",
+            //             actions: [MessageBox.Action.OK],
+            //             emphasizedAction: MessageBox.Action.OK,
+            //             initialFocus: MessageBox.Action.OK
+            //         }
+            //     );
+            //     return oPromise; // Stop execution if validation fails
+            // }
+
+            // // Validate Business Unit
+            // if (vBusinessUnit && !isValueInModel(vBusinessUnit, "Busunit")) {
+            //     MessageBox.error(
+            //         "Entered Business Unit is not correct.",
+            //         {
+            //             icon: MessageBox.Icon.ERROR,
+            //             onClose: function(){ fnReject(); },
+            //             title: "Incorrect Entry",
+            //             actions: [MessageBox.Action.OK],
+            //             emphasizedAction: MessageBox.Action.OK,
+            //             initialFocus: MessageBox.Action.OK
+            //         }
+            //     );
+            //     return oPromise; // Stop execution if validation fails
+            // }
 
             if(!this._changeType){
                 MessageBox.error("No Change Type was selected. Please select if Finance Related or CCD Related Change");
@@ -382,6 +481,7 @@ sap.ui.define([
 
             // Get current binding and apply filters
             var oBinding = oSmartTable.getTable().getBinding("items");
+
             if (oBinding) {
                 var aFilters = [];
 
@@ -394,7 +494,6 @@ sap.ui.define([
 
                 oBinding.filter(aFilters);
                 oSmartTable.rebindTable();
-                console.log("Filters applied on Smart Table binding:", aFilters);
             } else {
                 console.warn("No binding found for Smart Table!");
             }
