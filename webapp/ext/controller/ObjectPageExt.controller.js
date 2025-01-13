@@ -64,6 +64,31 @@ sap.ui.define([
             let valid = true;
             let missingFields = [];
 
+            // Reusable function to validate a dropdown field
+            const validateDropdownField = (fieldId, fieldName) => {
+                let field = sap.ui.getCore().byId(fieldId);
+                if (!field) {
+                    // Try using `this.byId` as a fallback
+                    field = this.byId(fieldId);
+                }
+
+                if (!field) {
+                    missingFields.push(fieldName);
+                    return false;
+                }
+
+                const enteredValue = field.getValue(); // User-entered value
+                const dropdownItems = field.getItems(); // Retrieve dropdown items
+                const dropdownValues = dropdownItems.map(item => item.getText()); // Extract values from items
+
+                // Check if entered value exists in the dropdown values
+                if (!dropdownValues.includes(enteredValue)) {
+                    missingFields.push(`${fieldName} "${enteredValue}" is not valid.`);
+                    return false;
+                }
+                return true;
+            };
+
             // Helper function to fetch field safely
             const getFieldById = (coreId, thisId) => sap.ui.getCore().byId(coreId) || this.byId(thisId);
 
@@ -79,77 +104,164 @@ sap.ui.define([
                 missingFields.push("Change Type");
             }
 
-            if(!country){
-                //try again this time use this.byId();
-                country = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Country::Field");
-                if(!country){
-                    valid = false;
-                    missingFields.push("Country");
-                }
+            // Validate specific dropdown fields -- Country
+            if (!validateDropdownField(
+                "dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Country::Field-comboBoxEdit",
+                "Country"
+            )) {
+                valid = false;
             }
 
-            if(!businessUnit){
-                //try again this time use this.byId();
-                businessUnit = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::BusinessUnit::Field");
-                if(!businessUnit){
-                    valid = false;
-                    missingFields.push("Business Unit");
-                }
+            // Validate specific dropdown fields -- Business Unit
+            if (!validateDropdownField(
+                "dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::BusinessUnit::Field-comboBoxEdit",
+                "BusinessUnit"
+            )) {
+                valid = false;
             }
 
-            if(!source){
-                source = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Source::Field");
-                if(!source){
-                    valid = false;
-                    missingFields.push("Source");
-                }
+            // Validate specific dropdown fields -- Product Type
+            if (!validateDropdownField(
+                "dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::ProdType::Field-comboBoxEdit",
+                "ProdType"
+            )) {
+                valid = false;
             }
+
+            // Validate specific dropdown fields -- Source
+            if (!validateDropdownField(
+                "dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Source::Field-comboBoxEdit",
+                "Source"
+            )) {
+                valid = false;
+            }
+
+            // if(!country){
+            //     //try again this time use this.byId();
+            //     country = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Country::Field");
+            //     if(!country){
+            //         valid = false;
+            //         missingFields.push("Country");
+            //     }
+            // }
+
+            // if(!businessUnit){
+            //     //try again this time use this.byId();
+            //     businessUnit = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::BusinessUnit::Field");
+            //     if(!businessUnit){
+            //         valid = false;
+            //         missingFields.push("Business Unit");
+            //     }
+            // }
+
+            // if(!source){
+            //     source = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Source::Field");
+            //     if(!source){
+            //         valid = false;
+            //         missingFields.push("Source");
+            //     }
+            // }
 
             if (selectedValue === "Finance Related") {
                 let taxClassification = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::TaxClassification::Field-comboBoxEdit");
                 let salesOrgField = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::ProductSalesOrg::Field-comboBoxEdit");
                 let distChannelField = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::ProductDistributionChnl::Field-comboBoxEdit");
                 
+                // Validate specific dropdown fields -- Sales Organization
+                if (!validateDropdownField(
+                    "dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::ProductSalesOrg::Field-comboBoxEdit",
+                    "ProductSalesOrg"
+                )) {
+                    valid = false;
+                }
+                // if(!salesOrgField){
+                //     salesOrgField = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::ProductSalesOrg::Field-comboBoxEdit");
+                //     if(!salesOrgField && salesOrgField.getValue() == ''){
+                //         valid = false;
+                //         missingFields.push("Sales Organization");
+                //     }
+                // }
 
-                if(!salesOrgField){
-                    salesOrgField = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::ProductSalesOrg::Field-comboBoxEdit");
-                    if(!salesOrgField && salesOrgField.getValue() == ''){
-                        valid = false;
-                        missingFields.push("Sales Organization");
-                    }
+                // Validate specific dropdown fields -- Distribution Channel
+                if (!validateDropdownField(
+                    "dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::ProductDistributionChnl::Field-comboBoxEdit",
+                    "ProductDistributionChnl"
+                )) {
+                    valid = false;
+                }
+                // if(!distChannelField){
+                //     distChannelField = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::ProductDistributionChnl::Field");
+                //     if(!distChannelField && distChannelField.getValue() == ''){
+                //         valid = false;
+                //         missingFields.push("Distribution Channel");
+                //     }
+                // }
+
+                // Validate specific dropdown fields -- Distribution Channel
+                // if (!validateDropdownField(
+                //     "dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::TaxClassification::Field-comboBoxEdit",
+                //     "TaxClassification"
+                // )) {
+                //     valid = false;
+                // }
+                if (!validateDropdownField(
+                    "dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::TaxClassification::Field-comboBoxEdit",
+                    "TaxClassification"
+                )) {
+                    valid = false;
                 }
 
-                if(!distChannelField){
-                    distChannelField = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::ProductDistributionChnl::Field");
-                    if(!distChannelField && distChannelField.getValue() == ''){
-                        valid = false;
-                        missingFields.push("Distribution Channel");
-                    }
-                }
-
-                if (!taxClassification) {
-                    taxClassification = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::TaxClassification::Field");
-                    if (!taxClassification && taxClassification.getValue() == '') {
-                        valid = false;
-                        missingFields.push("Tax Classification");
-                    }
+                if (!validateDropdownField(
+                    "dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRelatedChange::AcctAssmtGrg::Field-comboBoxEdit",
+                    "AcctAssmtGrg"
+                )) {
+                    valid = false;
                 }
             }
 
             if (selectedValue === "CCD Related") {
-                let hsCode = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idCCDRelatedChange::HSCode::Field-input").getValue();  
-                let importDuty = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idCCDRelatedChange::ImportDuty::Field-input").getValue();  
-
+                let hsCode;
+                let importDuty;
+            
+                try {
+                    hsCode = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idCCDRelatedChange::HSCode::Field-input").getValue();
+                } catch (error) {
+                    console.warn("HS Code field not found or getValue failed:", error);
+                    hsCode = null;
+                }
+            
                 if (!hsCode) {
-                    hsCode = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idCCDRelatedChange::HSCode::Field-input");
-                    if (!hsCode && hsCode === '') {
+                    try {
+                        const hsCodeField = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idCCDRelatedChange::HSCode::Field-input");
+                        hsCode = hsCodeField ? hsCodeField.getValue() : null;
+                    } catch (error) {
+                        console.warn("HS Code field from `this.byId` not found or getValue failed:", error);
+                        hsCode = null;
+                    }
+            
+                    if (!hsCode || hsCode === '') {
                         valid = false;
                         missingFields.push("HS Code");
                     }
                 }
+            
+                try {
+                    importDuty = sap.ui.getCore().byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idCCDRelatedChange::ImportDuty::Field-input").getValue();
+                } catch (error) {
+                    console.warn("Import Duty field not found or getValue failed:", error);
+                    importDuty = null;
+                }
+            
                 if (!importDuty) {
-                    this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idCCDRelatedChange::ImportDuty::Field-input");
-                    if (!importDuty && importDuty.getValue() == '') {
+                    try {
+                        const importDutyField = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idCCDRelatedChange::ImportDuty::Field-input");
+                        importDuty = importDutyField ? importDutyField.getValue() : null;
+                    } catch (error) {
+                        console.warn("Import Duty field from `this.byId` not found or getValue failed:", error);
+                        importDuty = null;
+                    }
+            
+                    if (!importDuty || importDuty === '') {
                         valid = false;
                         missingFields.push("Import Duty");
                     }
@@ -175,74 +287,6 @@ sap.ui.define([
 				fnResolve = resolve;
 				fnReject = reject;
 			});
-
-            // var oSmartTableId = "dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idRefDoc--RefDocTable";
-            // var oSmartTable = this.byId(oSmartTableId);
-
-            // if (!oSmartTable) {
-            //     console.warn("Smart Table not found!");
-            //     fnReject();
-            //     return oPromise;
-            // }
-
-            // //Country
-            // let vCountry = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::Country::Field");
-            // //BusinessUnit
-            // let vBusinessUnit = this.byId("dksh.ymm.mcfupdate.mcfupdate::sap.suite.ui.generic.template.ObjectPage.view.Details::YMM_C_MCF_UPDATE--idMaterialInput::BusinessUnit::Field");
-
-            // // Get current binding and apply filters
-            // var oBinding = oSmartTable.getTable().getBinding("items");
-
-            // //Validate Entries
-            // // Function to validate if value exists in the model
-            // const isValueInModel = (oInput, property) => {
-            //     const sValue = oInput.getValue(); // User input value
-            //     const oBinding = oInput.getBinding("suggestionItems"); // Value help binding
-
-            //     if (oBinding) {
-            //         const oModel = oBinding.getModel(); // Get the model attached to the control
-            //         const sPath = oBinding.getPath(); // Get the path of the data in the model
-
-            //         // Get all possible values from the model
-            //         const aValues = oModel.getProperty(sPath);
-            //         if (aValues && aValues.some((item) => item[property] === sValue)) {
-            //             return true; // Valid value
-            //         }
-            //     }
-            //     return false; // Invalid value
-            // };
-
-            // // Validate Country
-            // if (vCountry && !isValueInModel(vCountry, "Country")) {
-            //     MessageBox.error(
-            //         "Entered Country is not correct.",
-            //         {
-            //             icon: MessageBox.Icon.ERROR,
-            //             onClose: function(){ fnReject(); },
-            //             title: "Incorrect Entry",
-            //             actions: [MessageBox.Action.OK],
-            //             emphasizedAction: MessageBox.Action.OK,
-            //             initialFocus: MessageBox.Action.OK
-            //         }
-            //     );
-            //     return oPromise; // Stop execution if validation fails
-            // }
-
-            // // Validate Business Unit
-            // if (vBusinessUnit && !isValueInModel(vBusinessUnit, "Busunit")) {
-            //     MessageBox.error(
-            //         "Entered Business Unit is not correct.",
-            //         {
-            //             icon: MessageBox.Icon.ERROR,
-            //             onClose: function(){ fnReject(); },
-            //             title: "Incorrect Entry",
-            //             actions: [MessageBox.Action.OK],
-            //             emphasizedAction: MessageBox.Action.OK,
-            //             initialFocus: MessageBox.Action.OK
-            //         }
-            //     );
-            //     return oPromise; // Stop execution if validation fails
-            // }
 
             if(!this._changeType){
                 MessageBox.error("No Change Type was selected. Please select if Finance Related or CCD Related Change");
